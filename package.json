@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-forward-reply",
   "description": "Forward specific messages then wait for reply",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [

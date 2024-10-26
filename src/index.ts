@@ -5,8 +5,10 @@ import { } from '@hieuzest/koishi-plugin-send'
 declare module '@koishijs/cache' {
   interface Tables {
     'forward-reply': {
-      cid: string
+      platform: string
       sid: string
+      channelId: string
+      guildId?: string
       content: string
     }
   }
@@ -40,8 +42,10 @@ export function apply(ctx: Context, config: Config) {
           if (receipt.length) {
             // save to reply map
             ctx.cache.set('forward-reply', receipt[0], {
-              cid: argv.session.cid,
+              platform: argv.session.platform,
               sid: argv.session.sid,
+              channelId: argv.session.channelId,
+              guildId: argv.session.guildId,
               content: argv.session.content,
             }, config.replyTimeout)
             return ''
@@ -53,12 +57,12 @@ export function apply(ctx: Context, config: Config) {
     })
 
     ctx.middleware(async (session, next) => {
-      // prevent reverse replying
-      if (session.cid === config.targetChannel) return
+      if (session.cid !== config.targetChannel) return
       if (session.quote) {
         const reply = await ctx.cache.get('forward-reply', session.quote.id)
         if (reply) {
-          ctx.bots[reply.sid]?.sendMessage(reply.cid, reply.content)
+          console.log(reply)
+          ctx.bots[reply.sid]?.sendMessage(reply.channelId, session.content, reply.guildId)
           return
         }
       }
