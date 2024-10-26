@@ -61,7 +61,6 @@ export function apply(ctx: Context, config: Config) {
       if (session.quote) {
         const reply = await ctx.cache.get('forward-reply', session.quote.id)
         if (reply) {
-          console.log(reply)
           ctx.bots[reply.sid]?.sendMessage(reply.channelId, session.content, reply.guildId)
           return
         }
