@@ -57,12 +57,12 @@ export function apply(ctx: Context, config: Config) {
     })
 
     ctx.middleware(async (session, next) => {
-      if (session.cid !== config.targetChannel) return
+      if (session.cid !== config.targetChannel) return next()
       if (session.quote) {
         const reply = await ctx.cache.get('forward-reply', session.quote.id)
         if (reply) {
           ctx.bots[reply.sid]?.sendMessage(reply.channelId, session.content, reply.guildId)
-          return
+          return next()
         }
       }
       return next()
